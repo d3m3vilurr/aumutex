@@ -1,0 +1,17 @@
+{
+    "name": "aumutex",
+    "version": "0.0.1",
+    "description": "Named mutex terminated due to the process end of automatic",
+    "main": "aumutex.js",
+    "gypfile": true,
+    "scripts": {
+        "install": "node-gyp rebuild",
+        "test": "node test.js"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "cluster": "",
+        "sleep": ""
+    }
+}

@@ -1,13 +1,3 @@
-aumutex
-=======
-
-Named mutex terminated due to the process end of automatic
-
-
-## Examples
-
-```javascript
-// from test.js
 var cluster = require('cluster');
 var sleep = require('sleep');
 var aumutex = require('./aumutex');
@@ -65,20 +55,3 @@ if (cluster.isMaster) {
     console.info('[WORKER] process.exit()');
     process.exit();
 }
-
---- result ----
-[WORKER] create
-[WORKER] enter
-[MASTER] create
-[MASTER] wait
-[WORKER] leave
-[MASTER] enter
-[MASTER] close
-[MASTER] re-create
-[MASTER] wait
-[WORKER] wait
-[WORKER] re-enter
-[WORKER] process.exit()
-[MASTER] re-enter
-[MASTER] process.exit()
-```
