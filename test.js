@@ -26,7 +26,7 @@ if (cluster.isMaster) {
     console.info('[MASTER] re-create');
     
     console.info('[MASTER] wait');
-    sleep.sleep(2);
+    sleep.sleep(5);
     aumutex.enter(master_mutex);
     console.info('[MASTER] re-enter');
     

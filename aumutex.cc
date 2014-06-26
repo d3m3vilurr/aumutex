@@ -211,8 +211,8 @@ Handle<Value> enter(const Arguments& args) {
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     struct flock lock;
     int fd;
-    
-    fd = (int)(field->Value());
+   
+    fd = (long)(field->Value());
     
     lock.l_type = F_WRLCK;
     lock.l_start = 0;
@@ -233,7 +233,7 @@ Handle<Value> leave(const Arguments& args) {
     struct flock lock;
     int fd;
     
-    fd = (int)(field->Value());
+    fd = (long)(field->Value());
     
     lock.l_type = F_UNLCK;
     lock.l_start = 0;
@@ -253,7 +253,7 @@ Handle<Value> close(const Arguments& args) {
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     int fd;
     
-    fd = (int)(field->Value());
+    fd = (long)(field->Value());
 
     close(fd);
 
