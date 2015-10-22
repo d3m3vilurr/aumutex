@@ -2,7 +2,7 @@
   "targets": [
       {
           "target_name": "aumutex",
-		  "cflags_cc": [ '-fexceptions' ],
+          "cflags_cc": [ '-fexceptions' ],
           "sources": [
               "./aumutex.cc"
           ]

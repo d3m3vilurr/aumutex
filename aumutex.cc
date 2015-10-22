@@ -53,13 +53,13 @@ Handle<Value> ErrorCallback(Local<Function>& callback, const char *format, ...) 
     HandleScope scope;
     char error[256];
     va_list vl;
-    
-	va_start(vl, format);
-	vsprintf(error, format, vl);
-	va_end(vl);    
-    
+
+    va_start(vl, format);
+    vsprintf(error, format, vl);
+    va_end(vl);
+
     Handle<Value> argv[] = {Exception::Error(String::New(error))};
-    
+
     return scope.Close(callback->Call(Context::GetCurrent()->Global(), 1, argv));
 }
 
@@ -92,10 +92,10 @@ Handle<Value> create(const Arguments& args) {
 
     Local<ObjectTemplate> templ = ObjectTemplate::New();
     templ->SetInternalFieldCount(1);
-    
+
     Local<Object> inst = templ->NewInstance();
     inst->SetInternalField(0, External::New((void*)mutex));
-    
+
     return scope.Close(inst);
 }
 
@@ -105,14 +105,14 @@ Handle<Value> enter(const Arguments& args) {
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     DWORD wait;
     HANDLE mutex;
-   
+
     mutex = (HANDLE)(field->Value());
-    
+
     wait = WaitForSingleObject(mutex, INFINITE);
     if (wait == WAIT_FAILED) {
         return scope.Close(ErrorException(
-                "WaitForSingleObject error:%d (wait result:%d)", 
-                GetLastError(), 
+                "WaitForSingleObject error:%d (wait result:%d)",
+                GetLastError(),
                 wait));
     }
 
@@ -124,15 +124,15 @@ Handle<Value> leave(const Arguments& args) {
     REQUIRE_ARGUMENT_OBJECT(0, wrapper);
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     HANDLE mutex;
-    
+
     mutex = (HANDLE)(field->Value());
-    
+
     if (!ReleaseMutex(mutex)) {
         return scope.Close(ErrorException(
-                "ReleaseMutex error:%d", 
+                "ReleaseMutex error:%d",
                 GetLastError()));
     }
-    
+
     return scope.Close(Undefined());
 }
 
@@ -141,7 +141,7 @@ Handle<Value> close(const Arguments& args) {
     REQUIRE_ARGUMENT_OBJECT(0, wrapper);
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     HANDLE mutex;
-    
+
     mutex = (HANDLE)(field->Value());
 
     ReleaseMutex(mutex);
@@ -162,13 +162,13 @@ Handle<Value> ErrorCallback(Local<Function>& callback, const char *format, ...) 
     HandleScope scope;
     char error[256];
     va_list vl;
-    
-	va_start(vl, format);
-	vsprintf(error, format, vl);
-	va_end(vl);    
-    
+
+    va_start(vl, format);
+    vsprintf(error, format, vl);
+    va_end(vl);
+
     Handle<Value> argv[] = {Exception::Error(String::New(error))};
-    
+
     return scope.Close(callback->Call(Context::GetCurrent()->Global(), 1, argv));
 }
 
@@ -188,20 +188,20 @@ Handle<Value> create(const Arguments& args) {
     HandleScope scope;
     REQUIRE_ARGUMENT_ASCII_STRING(0, param_name);
     int fd;
-    
+
     fd = open(*param_name, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
     if (fd == -1) {
         return scope.Close(
             ErrorException("fopen(%s) error:%d", *param_name, errno)
             );
     }
-    
+
     Local<ObjectTemplate> templ = ObjectTemplate::New();
     templ->SetInternalFieldCount(1);
-    
+
     Local<Object> inst = templ->NewInstance();
     inst->SetInternalField(0, External::New((void*)fd));
-    
+
     return scope.Close(inst);
 }
 
@@ -211,14 +211,14 @@ Handle<Value> enter(const Arguments& args) {
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     struct flock lock;
     int fd;
-   
+
     fd = (long)(field->Value());
-    
+
     lock.l_type = F_WRLCK;
     lock.l_start = 0;
     lock.l_whence = SEEK_SET;
     lock.l_len = 0;
-    
+
     if (fcntl(fd, F_SETLKW, &lock) == -1) {
         return scope.Close(ErrorException("fcntl(lock) error:%d", errno));
     }
@@ -232,14 +232,14 @@ Handle<Value> leave(const Arguments& args) {
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     struct flock lock;
     int fd;
-    
+
     fd = (long)(field->Value());
-    
+
     lock.l_type = F_UNLCK;
     lock.l_start = 0;
     lock.l_whence = SEEK_SET;
     lock.l_len = 0;
-    
+
     if (fcntl(fd, F_SETLK, &lock) == -1) {
         return scope.Close(ErrorException("fcntl(unlock) error:%d", errno));
     }
@@ -252,7 +252,7 @@ Handle<Value> close(const Arguments& args) {
     REQUIRE_ARGUMENT_OBJECT(0, wrapper);
     Handle<External> field = Handle<External>::Cast(wrapper->GetInternalField(0));
     int fd;
-    
+
     fd = (long)(field->Value());
 
     close(fd);
